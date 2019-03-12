@@ -157,7 +157,7 @@ public class TelaControle extends AppCompatActivity {
     private void logoutApp() {
         mAuth.getInstance().signOut();
         Intent intent = new Intent(this, Login.class);
-        startActivity();
+        startActivity(intent);
         finish();
     }
 }
