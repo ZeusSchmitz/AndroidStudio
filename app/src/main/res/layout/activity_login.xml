@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_gradient"
+    tools:context=".Login">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="105dp"
+        app:srcCompat="@drawable/ic_icone" />
+
+    <EditText
+        android:id="@+id/edt_email"
+        android:layout_width="268dp"
+        android:layout_height="56dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="77dp"
+        android:layout_marginEnd="72dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/ic_edit_border"
+        android:drawableLeft="@drawable/ic_action_user"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff" />
+
+    <EditText
+        android:id="@+id/edt_senha"
+        android:layout_width="269dp"
+        android:layout_height="56dp"
+        android:layout_above="@+id/btn_logar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="71dp"
+        android:layout_marginEnd="71dp"
+        android:layout_marginBottom="43dp"
+        android:background="@drawable/ic_edit_border"
+        android:drawableLeft="@drawable/ic_action_password"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="Senha"
+        android:textColorHint="#ffffff"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/btn_logar"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="98dp"
+        android:layout_marginEnd="94dp"
+        android:layout_marginBottom="60dp"
+        android:text="Entrar" />
+
+</RelativeLayout>
