@@ -2,14 +2,16 @@ package com.TCC.webhome;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -19,6 +21,9 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.io.UnsupportedEncodingException;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -102,6 +107,7 @@ public class TelaControle extends AppCompatActivity {
                     // We are connected
                     Log.d(TAG, "onSuccess");
                     imageConec.setImageResource(R.drawable.ic_conec_mqtt);
+                    Toast.makeText(TelaControle.this, "Conectado ao MQTT", Toast.LENGTH_SHORT).show();
 //                    statusConec.setText("Conectado");
                 }
 
@@ -110,6 +116,7 @@ public class TelaControle extends AppCompatActivity {
                     // Something went wrong e.g. connection timeout or firewall problems
                     Log.d(TAG, "onFailure");
                     imageConec.setImageResource(R.drawable.ic_desconec_mqtt);
+                    Toast.makeText(TelaControle.this, "Falha na conexão MQTT", Toast.LENGTH_LONG).show();
 //                    statusConec.setText("Desconectando");
                 }
             });
@@ -122,7 +129,48 @@ public class TelaControle extends AppCompatActivity {
         for (int i=0;i < mainGrid.getChildCount();i++){
             final CardView cardView = (CardView)mainGrid.getChildAt(i);
             final int finali = i;
-            cardView.setOnClickListener(new View.OnClickListener() {
+            cardView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+                    ImageView imageView = findViewById(R.id.viCozi);
+                    ImageView imageViewS = findViewById(R.id.viSair);
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        v.setScaleX(0.95f);
+                        v.setScaleY(0.95f);
+                        cardView.setCardBackgroundColor(cardView.getResources().getColor(R.color.btnClicked));
+                        if(finali == 0){
+                            if(clicou){
+                                imageView.setImageResource(R.drawable.ic_lamp_ico);
+                                clicou = false;
+//                                Toast.makeText(TelaControle.this, "Desligar :" + finali, Toast.LENGTH_SHORT).show();
+                            }else{
+                                imageView.setImageResource(R.drawable.ic_lamp_acs);
+                                clicou = true;
+//                                Toast.makeText(TelaControle.this, "Ligar :" + finali, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        if(finali == 8){
+                            if(clicou){
+                                imageViewS.setImageResource(R.drawable.ic_sair);
+                                clicou = false;
+                            }else{
+                                imageViewS.setImageResource(R.drawable.ic_sair_v);
+                                clicou = true;
+                                logoutApp();
+                            }
+                        }
+                    } else if (action == MotionEvent.ACTION_UP) {
+                        v.animate().cancel();
+                        v.animate().scaleX(1f).setDuration(10).start();
+                        v.animate().scaleY(1f).setDuration(10).start();
+                        cardView.setCardBackgroundColor(Color.BLACK);
+                    }
+                    return true;
+                }
+            });
+/*            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ImageView imageView = findViewById(R.id.viCozi);
@@ -150,14 +198,24 @@ public class TelaControle extends AppCompatActivity {
                         }
                     }
                 }
-            });
+            });*/
         }
     }
 
     private void logoutApp() {
         mAuth.getInstance().signOut();
         Intent intent = new Intent(this, Login.class);
-        startActivity(inten);
+        startActivity(intent);
         finish();
+    }
+
+    public void pubSub(String status) {
+        String topic = "esp8266/pincmd";
+        String message = status;
+        try {
+            client.publish(topic, message.getBytes(), 0, false);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 }
