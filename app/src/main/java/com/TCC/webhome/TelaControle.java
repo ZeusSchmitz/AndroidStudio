@@ -124,11 +124,11 @@ public class TelaControle extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     private void setSingleEvent(GridLayout mainGrid) {
         for (int i=0;i < mainGrid.getChildCount();i++){
             final CardView cardView = (CardView)mainGrid.getChildAt(i);
             final int finali = i;
+
             cardView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

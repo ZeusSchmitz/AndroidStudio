@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_gradient"
-    tools:context=".Login">
+    tools:context=".Cadastrar">
 
     <ImageView
         android:id="@+id/imageView"
@@ -43,7 +43,7 @@
         android:id="@+id/edt_senha"
         android:layout_width="269dp"
         android:layout_height="56dp"
-        android:layout_above="@+id/btn_logar"
+        android:layout_above="@+id/btn_cadastrar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="71dp"
@@ -58,7 +58,7 @@
         android:textColor="#ffffff" />
 
     <Button
-        android:id="@+id/btn_logar"
+        android:id="@+id/btn_cadastrar"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -67,20 +67,6 @@
         android:layout_marginStart="98dp"
         android:layout_marginEnd="94dp"
         android:layout_marginBottom="60dp"
-        android:text="Entrar" />
-
-    <TextView
-        android:id="@+id/textRegistrar"
-        android:layout_width="241dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="97dp"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="27dp"
-        android:onClick="registrarClick"
-        android:text="Não é registrado? Registrar"
-        android:textColor="#ffffff" />
+        android:text="Cadastrar" />
 
 </RelativeLayout>
