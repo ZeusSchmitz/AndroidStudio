@@ -143,10 +143,12 @@ public class TelaControle extends AppCompatActivity {
                             if(clicou){
                                 imageView.setImageResource(R.drawable.ic_lamp_ico);
                                 clicou = false;
+                                pubSub("desliga");
 //                                Toast.makeText(TelaControle.this, "Desligar :" + finali, Toast.LENGTH_SHORT).show();
                             }else{
                                 imageView.setImageResource(R.drawable.ic_lamp_acs);
                                 clicou = true;
+                                pubSub("liga");
 //                                Toast.makeText(TelaControle.this, "Ligar :" + finali, Toast.LENGTH_SHORT).show();
                             }
                         }
