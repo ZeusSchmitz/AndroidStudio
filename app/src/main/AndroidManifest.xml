@@ -16,8 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Cadastrar"></activity>
-        <activity android:name=".ConectaMqtt" />
-        <activity android:name=".Conecta" />
         <activity android:name=".TelaControle" />
         <activity android:name=".Login" />
         <activity android:name=".MainActivity">
