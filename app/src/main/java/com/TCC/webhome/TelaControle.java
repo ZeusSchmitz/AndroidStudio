@@ -3,6 +3,7 @@ package com.TCC.webhome;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -12,6 +13,11 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class TelaControle extends AppCompatActivity {
@@ -19,6 +25,9 @@ public class TelaControle extends AppCompatActivity {
     private FirebaseAuth mAuth;
     GridLayout mainGrid;
     Context context;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference = database.getReference(".info/connected");
+    DatabaseReference myRef = database.getReference("LED_STATUS");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,17 +35,23 @@ public class TelaControle extends AppCompatActivity {
         setContentView(R.layout.activity_tela_controle);
 
         context = this.getApplicationContext();
-        conectaMqtt();
-
         mainGrid = findViewById(R.id.mainGrid);
+        firebaseConectado(reference.getKey());
 
         setSingleEvent(mainGrid);
-
     }
 
-    public void conectaMqtt(){
+    private void firebaseConectado(String conectado) {
         final ImageView imageConec = findViewById(R.id.imageConec);
+        if(conectado.equals("connected")){
+            imageConec.setImageResource(R.drawable.ic_conec_mqtt);
+            Toast.makeText(TelaControle.this, "Conectado ao Firebase", Toast.LENGTH_SHORT).show();
+        }else {
+            imageConec.setImageResource(R.drawable.ic_desconec_mqtt);
+            Toast.makeText(TelaControle.this, "Falha na conexão Firebase", Toast.LENGTH_LONG).show();
+        }
     }
+
     private void setSingleEvent(GridLayout mainGrid) {
         for (int i=0;i < mainGrid.getChildCount();i++){
             final CardView cardView = (CardView)mainGrid.getChildAt(i);
@@ -57,12 +72,12 @@ public class TelaControle extends AppCompatActivity {
                             if(clicou){
                                 imageView.setImageResource(R.drawable.ic_lamp_ico);
                                 clicou = false;
-                                pubSub("desliga");
+                                myRef.setValue(0);
 //                                Toast.makeText(TelaControle.this, "Desligar :" + finali, Toast.LENGTH_SHORT).show();
                             }else{
                                 imageView.setImageResource(R.drawable.ic_lamp_acs);
                                 clicou = true;
-                                pubSub("liga");
+                                myRef.setValue(1);
 //                                Toast.makeText(TelaControle.this, "Ligar :" + finali, Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -138,7 +153,6 @@ public class TelaControle extends AppCompatActivity {
     }
 
     public void pubSub(String status) {
-        String topic = "esp8266/pincmd";
         String message = status;
     }
 }
