@@ -22,15 +22,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp">
 
-            <TextView
-                android:id="@+id/tituloTela"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Controle"
-                android:textColor="#ffffff"
-                android:textSize="24sp" />
-
- <!--           <TextView
+            <!--           <TextView
                 android:id="@+id/statusConec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,12 +32,32 @@
                 android:textColor="#A2A2A2"
                 android:textSize="15sp" />-->
 
+            <TextView
+                android:id="@+id/tituloTela2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Controle"
+                android:textColor="#ffffff"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="172dp"
+                android:layout_marginBottom="0dp"
+                android:text="0,0 °C"
+                android:textColor="#ffffff"
+                android:textSize="24sp" />
+
             <ImageView
                 android:id="@+id/imageConec"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 app:srcCompat="@drawable/ic_desconec_mqtt" />
+
         </RelativeLayout>
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
