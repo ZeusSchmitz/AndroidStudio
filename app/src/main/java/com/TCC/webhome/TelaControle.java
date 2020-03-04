@@ -1,8 +1,14 @@
 package com.TCC.webhome;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -19,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.nio.channels.Channel;
+
 public class TelaControle extends AppCompatActivity {
     boolean clicou = false;
     private FirebaseAuth mAuth;
@@ -29,9 +37,12 @@ public class TelaControle extends AppCompatActivity {
     DatabaseReference myRef = database.getReference("lamp");
     DatabaseReference tempRef = database.getReference("temperature");
     DatabaseReference espConected = database.getReference("espConnected");
+    DatabaseReference presence = database.getReference("presence");
     boolean statusLamp = false;
     boolean espCone = false;
-    final long time = 5000;
+    boolean passed = false;
+    String titulo = "Sensor acionado";
+    String textAlert = "Sensor barreira 1 acionado";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +72,41 @@ public class TelaControle extends AppCompatActivity {
         }
     }
 
+    public void creatNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "sensor_1")
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentTitle(titulo)
+                .setContentText(textAlert)
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
+                .setVibrate(new long[]{1000,1000});
+
+        // Creates the intent needed to show the notification
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
+    }
+
     public void readStatus() {
+        presence.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                passed = Boolean.parseBoolean(dataSnapshot.getValue().toString());
+                if (passed) {
+                    creatNotification();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Toast.makeText(TelaControle.this, "Desligar :" + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         espConected.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
