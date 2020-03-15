@@ -1,12 +1,14 @@
 package com.TCC.webhome;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +56,7 @@ public class TelaControle extends AppCompatActivity {
 
         readStatus();
         setSingleEvent(mainGrid);
+        createNotificationChannel();
     }
 
     private void firebaseConnected(String connected) {
@@ -72,22 +75,40 @@ public class TelaControle extends AppCompatActivity {
         }
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "ALERTA BARREIRA";
+            String description = "Sensor de presença";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("sensor", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     public void creatNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "sensor_1")
+        Intent intent = new Intent(this, TelaControle.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "sensor")
                 .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(titulo)
-                .setContentText(textAlert)
-                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
-                .setVibrate(new long[]{1000,1000});
+                .setContentTitle("Sensor ativado")
+                .setContentText("Sensor barreira Cozinha ativado")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
-        // Creates the intent needed to show the notification
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        // Add as notification
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, builder.build());
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(6565, builder.build());
     }
 
     public void readStatus() {
@@ -191,10 +212,12 @@ public class TelaControle extends AppCompatActivity {
                                 imageView1.setImageResource(R.drawable.ic_lamp_ico);
                                 clicou = false;
                                 Toast.makeText(TelaControle.this, "Desligar :" + finali, Toast.LENGTH_SHORT).show();
+                                creatNotification();
                             }else{
                                 imageView1.setImageResource(R.drawable.ic_lamp_acs);
                                 clicou = true;
                                 Toast.makeText(TelaControle.this, "Ligar :" + finali, Toast.LENGTH_SHORT).show();
+                                creatNotification();
                             }
                         }
 
